@@ -87,10 +87,6 @@ return [
 ];
 ```
 
-## Todo
-
-1. Add more unit and integration tests
-
 ## License
 
 The MIT License (MIT)
