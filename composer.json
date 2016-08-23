@@ -1,0 +1,27 @@
+{
+    "name": "dusterio/lumen-passport",
+    "type": "library",
+    "description": "Making Laravel Passport work with Lumen",
+    "keywords": ["php","lumen","laravel passport"],
+    "homepage": "https://github.com/dusterio/lumen-passport",
+    "minimum-stability": "dev",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Denis Mysenko",
+            "email": "denis@mysenko.com",
+            "homepage": "https://www.mysenko.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.0",
+        "illuminate/database": "~5.3",
+        "illuminate/support": "~5.3",
+        "laravel/passport": ">=0.2.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Dusterio\\LumenPassport\\": "src/"
+        }
+    }
+}
