@@ -31,11 +31,33 @@ Or add it to `composer.json` manually:
 }
 ```
 
-### Add it in the bootstrap flow
+### Modify the bootstrap flow (```bootstrap/app.php``` file)
 
 ```php
-// Add in your bootstrap/app.php
+// Enable Facades
+$app->withFacades();
+
+// Enable Eloquent
+$app->withEloquent();
+
+// Enable auth middleware (shipped with Lumen)
+$app->routeMiddleware([
+    'auth' => App\Http\Middleware\Authenticate::class,
+]);
+
+// Finally register two service providers - original one and Lumen adapter
+$app->register(Laravel\Passport\PassportServiceProvider::class);
 $app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
+```
+
+### Migrate and install Laravel Passport
+
+```bash
+# Create new tables for Passport
+php artisan migrate
+
+# Install encryption keys and other necessary stuff for Passport
+php artisan passport:install
 ```
 
 ### Installed routes
