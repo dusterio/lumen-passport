@@ -33,11 +33,12 @@ class AccessTokenController extends \Laravel\Passport\Http\Controllers\AccessTok
         $payload = json_decode($response->getBody()->__toString(), true);
 
         if (isset($payload['access_token'])) {
-            $token = $this->tokens->find(
-                $tokenId = $this->jwt->parse($payload['access_token'])->getClaim('jti')
-            );
+            $tokenId = $this->jwt->parse($payload['access_token'])->getClaim('jti');
+            $token = $this->tokens->find($tokenId);
 
             if (! $token->client->firstParty() || ! LumenPassport::$allowMultipleTokens) {
+                // We keep previous tokens for password clients
+            } else {
                 $this->revokeOrDeleteAccessTokens($token, $tokenId);
             }
         }
