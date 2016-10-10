@@ -109,6 +109,28 @@ return [
 ];
 ```
 
+## Extra features
+
+There are a couple of extra features that aren't present in Laravel Passport
+
+### Allowing multiple tokens per client
+
+Sometimes it's handy to allow multiple access tokens per password grant client. Eg. user logs in from several browsers 
+simultaneously. Currently Laravel Passport does not allow that.
+
+```php
+use Dusterio\LumenPassport\LumenPassport;
+
+// Somewhere in your application service provider or bootstrap process
+LumenPassport::allowMultipleTokens();
+
+```
+
+### Console command for purging expired tokens
+
+Simply run ```php artisan passport:purge``` to remove expired refresh tokens and their corresponding access tokens from the database.
+
+
 ## License
 
 The MIT License (MIT)
