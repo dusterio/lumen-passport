@@ -1,6 +1,8 @@
 <?php
+
 namespace Dusterio\LumenPassport;
 
+use Dusterio\LumenPassport\Console\Commands\Purge;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Connection;
 
@@ -20,6 +22,12 @@ class PassportServiceProvider extends ServiceProvider
         $this->app->singleton(Connection::class, function() {
             return $this->app['db.connection'];
         });
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                Purge::class
+            ]);
+        }
 
         $this->registerRoutes();
     }
@@ -51,7 +59,7 @@ class PassportServiceProvider extends ServiceProvider
     public function forAccessTokens()
     {
         $this->app->post('/oauth/token', [
-            'uses' => '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken'
+            'uses' => '\Dusterio\LumenPassport\Http\Controllers\AccessTokenController@issueToken'
         ]);
 
         $this->app->group(['middleware' => ['auth']], function () {
