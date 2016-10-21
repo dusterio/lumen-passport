@@ -15,13 +15,19 @@ A simple service provider that makes Laravel Passport work with Lumen
 
 ## Installation via Composer
 
-To install simply run:
-
+First install Lumen if you don't have it yet:
+```bash
+$ composer create-project --prefer-dist laravel/lumen lumen-app
 ```
-composer require dusterio/lumen-passport
+
+Then install Lumen Passport (it will fetch Laravel Passport along):
+
+```bash
+$ cd lumen-app
+$ composer require dusterio/lumen-passport
 ```
 
-Or add it to `composer.json` manually:
+Or if you prefer, edit `composer.json` manually:
 
 ```json
 {
@@ -32,6 +38,8 @@ Or add it to `composer.json` manually:
 ```
 
 ### Modify the bootstrap flow (```bootstrap/app.php``` file)
+
+We need to enable both Laravel Passport provider and Lumen-specific provider:
 
 ```php
 // Enable Facades
