@@ -134,6 +134,20 @@ LumenPassport::allowMultipleTokens();
 
 ```
 
+### Different TTLs for different password clients
+
+Laravel Passport allows to set one global TTL for access tokens, but it may be useful sometimes
+to set different TTLs for different clients (eg. mobile users get more time than desktop users).
+
+Simply do the following in your service provider:
+
+```php
+// Second parameter is the client Id
+LumenPassport::tokensExpireIn(Carbon::now()->addYears(50), 2); 
+```
+
+If you don't specify client Id, it will simply fall back to Laravel Passport implementation.
+
 ### Console command for purging expired tokens
 
 Simply run ```php artisan passport:purge``` to remove expired refresh tokens and their corresponding access tokens from the database.

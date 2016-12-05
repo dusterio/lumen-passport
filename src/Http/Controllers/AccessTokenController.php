@@ -23,6 +23,13 @@ class AccessTokenController extends \Laravel\Passport\Http\Controllers\AccessTok
     public function issueToken(ServerRequestInterface $request)
     {
         $response = $this->withErrorHandling(function () use ($request) {
+            $clientId = ((array) $request->getParsedBody())['client_id'] ?? null;
+
+            // Overwrite password grant at the last minute to add support for customized TTLs
+            $this->server->enableGrantType(
+                $this->makePasswordGrant(), LumenPassport::tokensExpireIn(null, $clientId)
+            );
+
             return $this->server->respondToAccessTokenRequest($request, new Psr7Response);
         });
 
@@ -44,6 +51,23 @@ class AccessTokenController extends \Laravel\Passport\Http\Controllers\AccessTok
         }
 
         return $response;
+    }
+
+    /**
+     * Create and configure a Password grant instance.
+     *
+     * @return \League\OAuth2\Server\Grant\PasswordGrant
+     */
+    private function makePasswordGrant()
+    {
+        $grant = new \League\OAuth2\Server\Grant\PasswordGrant(
+            app()->make(\Laravel\Passport\Bridge\UserRepository::class),
+            app()->make(\Laravel\Passport\Bridge\RefreshTokenRepository::class)
+        );
+
+        $grant->setRefreshTokenTTL(Passport::refreshTokensExpireIn());
+
+        return $grant;
     }
 
     /**
