@@ -53,7 +53,7 @@ class LumenPassport
         if (is_null($date)) {
             return isset(static::$tokensExpireAt[$clientId])
                 ? Carbon::now()->diff(static::$tokensExpireAt[$clientId])
-                : new DateInterval('P100Y');
+                : Passport::tokensExpireIn();
         } else {
             static::$tokensExpireAt[$clientId] = $date;
         }
