@@ -23,8 +23,8 @@ class AccessTokenController extends \Laravel\Passport\Http\Controllers\AccessTok
     public function issueToken(ServerRequestInterface $request)
     {
         $response = $this->withErrorHandling(function () use ($request) {
-            $clientId = array_key_exists('client_id', (array) $request->getParsedBody())
-                ? ((array) $request->getParsedBody())['client_id'] : null;
+            $input = (array) $request->getParsedBody();
+            $clientId = isset($input['client_id']) ? $input['client_id'] : null;
 
             // Overwrite password grant at the last minute to add support for customized TTLs
             $this->server->enableGrantType(
