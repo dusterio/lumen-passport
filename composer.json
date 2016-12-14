@@ -18,6 +18,11 @@
         "illuminate/support": "~5.3",
         "laravel/passport": ">=0.2.2"
     },
+    "require-dev": {
+        "fzaninotto/faker": "~1.4",
+        "phpunit/phpunit": "~5.0",
+        "codeclimate/php-test-reporter": "dev-master"
+    },
     "autoload": {
         "psr-4": {
             "Dusterio\\LumenPassport\\": "src/"
