@@ -44,7 +44,7 @@ class LumenPassport
      *
      * @param  \DateTimeInterface|null  $date
      * @param int $clientId
-     * @return \DateInterval|static|Passport
+     * @return \DateInterval|static
      */
     public static function tokensExpireIn(DateTimeInterface $date = null, $clientId = null)
     {
