@@ -119,6 +119,19 @@ return [
 ];
 ```
 
+## User model
+
+Make sure your user model uses Passport's ```HasApiTokens``` trait, eg.:
+
+```php
+class User extends Model implements AuthenticatableContract, AuthorizableContract
+{
+    use HasApiTokens, Authenticatable, Authorizable;
+
+    /* rest of the model */
+}
+```
+
 ## Extra features
 
 There are a couple of extra features that aren't present in Laravel Passport
