@@ -1,4 +1,6 @@
 # lumen-passport
+[![Build Status](https://travis-ci.org/dusterio/lumen-passport.svg)](https://travis-ci.org/dusterio/lumen-passport)
+[![Code Climate](https://codeclimate.com/github/dusterio/lumen-passport/badges/gpa.svg)](https://codeclimate.com/github/dusterio/lumen-passport/badges)
 [![Total Downloads](https://poser.pugx.org/dusterio/lumen-passport/d/total.svg)](https://packagist.org/packages/dusterio/lumen-passport)
 [![Latest Stable Version](https://poser.pugx.org/dusterio/lumen-passport/v/stable.svg)](https://packagist.org/packages/dusterio/lumen-passport)
 [![Latest Unstable Version](https://poser.pugx.org/dusterio/lumen-passport/v/unstable.svg)](https://packagist.org/packages/dusterio/lumen-passport)
