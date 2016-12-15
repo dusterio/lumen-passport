@@ -168,6 +168,18 @@ If you don't specify client Id, it will simply fall back to Laravel Passport imp
 Simply run ```php artisan passport:purge``` to remove expired refresh tokens and their corresponding access tokens from the database.
 
 
+## Running with Apache httpd
+
+If you are using Apache web server, it may strip Authorization headers and thus break Passport.
+
+Add the following either to your config directly or to ```.htaccess```:
+
+```
+RewriteEngine On
+RewriteCond %{HTTP:Authorization} ^(.*)
+RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
+```
+
 ## License
 
 The MIT License (MIT)
