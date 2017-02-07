@@ -80,8 +80,16 @@ class AccessTokenController extends \Laravel\Passport\Http\Controllers\AccessTok
      */
     protected function revokeOrDeleteAccessTokens(Token $token, $tokenId)
     {
-        $this->tokens->revokeOtherAccessTokens(
-            $token->client_id, $token->user_id, $tokenId, Passport::$pruneRevokedTokens
-        );
+        $query = Token::where('user_id', $token->user_id)->where('client_id', $token->client_id);
+
+        if ($tokenId) {
+            $query->where('id', '<>', $tokenId);
+        }
+
+        if (Passport::$pruneRevokedTokens) {
+            $query->delete();
+        } else {
+            $query->update(['revoked' => true]);
+        }
     }
 }
