@@ -41,16 +41,19 @@ class RouteRegistrar
     public function forAccessTokens()
     {
         $this->app->post('/token', [
-            'uses' => '\Dusterio\LumenPassport\Http\Controllers\AccessTokenController@issueToken'
+            'uses' => 'AccessTokenController@issueToken',
+            'namespace' => '\Dusterio\LumenPassport\Http\Controllers'
         ]);
 
         $this->app->group(['middleware' => ['auth']], function () {
             $this->app->get('/tokens', [
-                'uses' => '\Laravel\Passport\Http\Controllers\AuthorizedAccessTokenController@forUser',
+                'uses' => 'AuthorizedAccessTokenController@forUser',
+                'namespace' => '\Laravel\Passport\Http\Controllers'
             ]);
 
             $this->app->delete('/tokens/{token_id}', [
-                'uses' => '\Laravel\Passport\Http\Controllers\AuthorizedAccessTokenController@destroy',
+                'uses' => 'AuthorizedAccessTokenController@destroy',
+                'namespace' => '\Laravel\Passport\Http\Controllers'
             ]);
         });
     }
@@ -64,7 +67,8 @@ class RouteRegistrar
     {
         $this->app->post('/token/refresh', [
             'middleware' => ['auth'],
-            'uses' => '\Laravel\Passport\Http\Controllers\TransientTokenController@refresh',
+            'uses' => 'TransientTokenController@refresh',
+            'namespace' => '\Laravel\Passport\Http\Controllers'
         ]);
     }
 
@@ -77,19 +81,23 @@ class RouteRegistrar
     {
         $this->app->group(['middleware' => ['auth']], function () {
             $this->app->get('/clients', [
-                'uses' => '\Laravel\Passport\Http\Controllers\ClientController@forUser',
+                'uses' => 'ClientController@forUser',
+                'namespace' => '\Laravel\Passport\Http\Controllers'
             ]);
 
             $this->app->post('/clients', [
-                'uses' => '\Laravel\Passport\Http\Controllers\ClientController@store',
+                'uses' => 'ClientController@store',
+                'namespace' => '\Laravel\Passport\Http\Controllers'
             ]);
 
             $this->app->put('/clients/{client_id}', [
-                'uses' => '\Laravel\Passport\Http\Controllers\ClientController@update',
+                'uses' => 'ClientController@update',
+                'namespace' => '\Laravel\Passport\Http\Controllers'
             ]);
 
             $this->app->delete('/clients/{client_id}', [
-                'uses' => '\Laravel\Passport\Http\Controllers\ClientController@destroy',
+                'uses' => 'ClientController@destroy',
+                'namespace' => '\Laravel\Passport\Http\Controllers'
             ]);
         });
     }
@@ -103,19 +111,23 @@ class RouteRegistrar
     {
         $this->app->group(['middleware' => ['auth']], function () {
             $this->app->get('/scopes', [
-                'uses' => '\Laravel\Passport\Http\Controllers\ScopeController@all',
+                'uses' => 'ScopeController@all',
+                'namespace' => '\Laravel\Passport\Http\Controllers'
             ]);
 
             $this->app->get('/personal-access-tokens', [
-                'uses' => '\Laravel\Passport\Http\Controllers\PersonalAccessTokenController@forUser',
+                'uses' => 'PersonalAccessTokenController@forUser',
+                'namespace' => '\Laravel\Passport\Http\Controllers'
             ]);
 
             $this->app->post('/personal-access-tokens', [
-                'uses' => '\Laravel\Passport\Http\Controllers\PersonalAccessTokenController@store',
+                'uses' => 'PersonalAccessTokenController@store',
+                'namespace' => '\Laravel\Passport\Http\Controllers'
             ]);
 
             $this->app->delete('/personal-access-tokens/{token_id}', [
-                'uses' => '\Laravel\Passport\Http\Controllers\PersonalAccessTokenController@destroy',
+                'uses' => 'PersonalAccessTokenController@destroy',
+                'namespace' => '\Laravel\Passport\Http\Controllers'
             ]);
         });
     }
