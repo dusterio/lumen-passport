@@ -60,4 +60,29 @@ class LumenPassport
 
         return new static;
     }
+
+    /**
+     * Get a Passport route registrar.
+     *
+     * @param  array  $options
+     * @return RouteRegistrar
+     */
+    public static function routes($callback = null, array $options = [])
+    {
+        $callback = $callback ?: function ($router) {
+            $router->all();
+        };
+
+        $defaultOptions = [
+            'prefix' => 'oauth',
+            'namespace' => '\Laravel\Passport\Http\Controllers',
+        ];
+
+        $options = array_merge($defaultOptions, $options);
+
+        $callback->group($options, function ($router) use ($callback) {
+            $routes = new RouteRegistrar($router);
+            $routes->all();
+        });
+    }
 }
