@@ -42,6 +42,11 @@ class Purge extends Command
                 ->where('expires_at', '<', (new DateTime())->setTimestamp(time() - $difference))
                 ->delete();
         }
+        
+        $count += DB::table('oauth_access_tokens')
+            ->where('expires_at', '<', new DateTime())
+            ->where('user_id', '=', null)
+            ->delete();
 
         $this->info('Successfully deleted expired tokens: ' . $count);
     }
