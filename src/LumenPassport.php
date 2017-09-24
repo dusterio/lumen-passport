@@ -64,10 +64,12 @@ class LumenPassport
     /**
      * Get a Passport route registrar.
      *
-     * @param  array  $options
+     * @param  \Laravel\Lumen\Routing\Router $router
+     * @param  callable|null                 $callback
+     * @param  array                         $options
      * @return RouteRegistrar
      */
-    public static function routes($callback = null, array $options = [])
+    public static function routes($router, $callback = null, array $options = [])
     {
         $callback = $callback ?: function ($router) {
             $router->all();
@@ -80,9 +82,8 @@ class LumenPassport
 
         $options = array_merge($defaultOptions, $options);
 
-        $callback->group($options, function ($router) use ($callback) {
-            $routes = new RouteRegistrar($router);
-            $routes->all();
+        $router->group($options, function ($router) use ($callback) {
+            $callback(new RouteRegistrar($router));
         });
     }
 }
