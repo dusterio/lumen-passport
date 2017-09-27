@@ -124,13 +124,13 @@ return [
 Next, you should call the LumenPassport::routes method within the boot method of your application. This method will register the routes necessary to issue access tokens and revoke access tokens, clients, and personal access tokens:
 
 ```php
-Dusterio\LumenPassport\LumenPassport::routes($app->router);
+Dusterio\LumenPassport\LumenPassport::routes();
 ```
 
 You can add that into an existing group, or add use this route registrar independently like so;
 
 ```php
-Dusterio\LumenPassport\LumenPassport::routes($app->router, null, ['prefix' => 'v1/oauth']);
+Dusterio\LumenPassport\LumenPassport::routes(null, ['prefix' => 'v1/oauth']);
 ```
 
 ## User model
