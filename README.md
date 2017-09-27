@@ -13,7 +13,7 @@ A simple service provider that makes Laravel Passport work with Lumen
 ## Dependencies
 
 * PHP >= 5.6.3
-* Lumen >= 5.3
+* Lumen >= 5.5
 
 ## Installation via Composer
 
@@ -124,13 +124,13 @@ return [
 Next, you should call the LumenPassport::routes method within the boot method of your application. This method will register the routes necessary to issue access tokens and revoke access tokens, clients, and personal access tokens:
 
 ```php
-Dusterio\LumenPassport\LumenPassport::routes($app);
+Dusterio\LumenPassport\LumenPassport::routes();
 ```
 
 You can add that into an existing group, or add use this route registrar independently like so;
 
 ```php
-Dusterio\LumenPassport\LumenPassport::routes($app, ['prefix' => 'v1/oauth']);
+Dusterio\LumenPassport\LumenPassport::routes(null, ['prefix' => 'v1/oauth']);
 ```
 
 ## User model
