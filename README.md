@@ -39,6 +39,16 @@ Or if you prefer, edit `composer.json` manually:
 }
 ```
 
+For Lumen 5.5:
+
+```json
+{
+    "require": {
+        "dusterio/lumen-passport": "^0.2.0"
+    }
+}
+```
+
 ### Modify the bootstrap flow (```bootstrap/app.php``` file)
 
 We need to enable both Laravel Passport provider and Lumen-specific provider:
@@ -58,6 +68,13 @@ $app->routeMiddleware([
 // Finally register two service providers - original one and Lumen adapter
 $app->register(Laravel\Passport\PassportServiceProvider::class);
 $app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
+```
+
+#### For Lumen 5.5 & Lumen-passport 0.2.0
+
+```php
+// Register config 
+$app->configure('auth');
 ```
 
 ### Migrate and install Laravel Passport
@@ -118,6 +135,19 @@ return [
     ]
 ];
 ```
+
+#### For Lumen 5.5 & Lumen-passport 0.2.0
+Copy config/auth.php content to config/oauth.php due to this code in Illuminate\Auth\AuthManager:
+
+```php
+
+    protected function getConfig($name)
+    {
+        return $this->app['config']["oauth.guards.{$name}"];
+    }
+
+```
+
 
 ## Registering Routes
 
