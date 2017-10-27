@@ -5,19 +5,25 @@ namespace Dusterio\LumenPassport;
 class RouteRegistrar
 {
     /**
-     * Application
+     * @var Application
      */
     private $app;
+
+    /**
+     * @var array
+     */
+    private $options;
 
     /**
      * Create a new route registrar instance.
      *
      * @param  $app
-     * @return void
+     * @param  array $options
      */
-    public function __construct($app)
+    public function __construct($app, array $options = [])
     {
         $this->app = $app;
+        $this->options = $options;
     }
 
     /**
@@ -34,27 +40,28 @@ class RouteRegistrar
     }
 
     /**
+     * @param string $path
+     * @return string
+     */
+    private function prefix($path)
+    {
+        if (strstr($path, '\\') === false && isset($this->options['namespace'])) return $this->options['namespace'] . '\\' . $path;
+
+        return $path;
+    }
+
+    /**
      * Register the routes for retrieving and issuing access tokens.
      *
      * @return void
      */
     public function forAccessTokens()
     {
-        $this->app->post('/token', [
-            'uses' => 'AccessTokenController@issueToken',
-            'namespace' => '\Dusterio\LumenPassport\Http\Controllers'
-        ]);
+        $this->app->post('/token', $this->prefix('\Dusterio\LumenPassport\Http\Controllers\AccessTokenController@issueToken'));
 
         $this->app->group(['middleware' => ['auth']], function () {
-            $this->app->get('/tokens', [
-                'uses' => 'AuthorizedAccessTokenController@forUser',
-                'namespace' => '\Laravel\Passport\Http\Controllers'
-            ]);
-
-            $this->app->delete('/tokens/{token_id}', [
-                'uses' => 'AuthorizedAccessTokenController@destroy',
-                'namespace' => '\Laravel\Passport\Http\Controllers'
-            ]);
+            $this->app->get('/tokens', $this->prefix('AuthorizedAccessTokenController@forUser'));
+            $this->app->delete('/tokens/{token_id}', $this->prefix('AuthorizedAccessTokenController@destroy'));
         });
     }
 
@@ -67,8 +74,7 @@ class RouteRegistrar
     {
         $this->app->post('/token/refresh', [
             'middleware' => ['auth'],
-            'uses' => 'TransientTokenController@refresh',
-            'namespace' => '\Laravel\Passport\Http\Controllers'
+            'uses' => $this->prefix('TransientTokenController@refresh')
         ]);
     }
 
@@ -80,25 +86,10 @@ class RouteRegistrar
     public function forClients()
     {
         $this->app->group(['middleware' => ['auth']], function () {
-            $this->app->get('/clients', [
-                'uses' => 'ClientController@forUser',
-                'namespace' => '\Laravel\Passport\Http\Controllers'
-            ]);
-
-            $this->app->post('/clients', [
-                'uses' => 'ClientController@store',
-                'namespace' => '\Laravel\Passport\Http\Controllers'
-            ]);
-
-            $this->app->put('/clients/{client_id}', [
-                'uses' => 'ClientController@update',
-                'namespace' => '\Laravel\Passport\Http\Controllers'
-            ]);
-
-            $this->app->delete('/clients/{client_id}', [
-                'uses' => 'ClientController@destroy',
-                'namespace' => '\Laravel\Passport\Http\Controllers'
-            ]);
+            $this->app->get('/clients', $this->prefix('ClientController@forUser'));
+            $this->app->post('/clients', $this->prefix('ClientController@store'));
+            $this->app->put('/clients/{client_id}', $this->prefix('ClientController@update'));
+            $this->app->delete('/clients/{client_id}', $this->prefix('ClientController@destroy'));
         });
     }
 
@@ -110,25 +101,10 @@ class RouteRegistrar
     public function forPersonalAccessTokens()
     {
         $this->app->group(['middleware' => ['auth']], function () {
-            $this->app->get('/scopes', [
-                'uses' => 'ScopeController@all',
-                'namespace' => '\Laravel\Passport\Http\Controllers'
-            ]);
-
-            $this->app->get('/personal-access-tokens', [
-                'uses' => 'PersonalAccessTokenController@forUser',
-                'namespace' => '\Laravel\Passport\Http\Controllers'
-            ]);
-
-            $this->app->post('/personal-access-tokens', [
-                'uses' => 'PersonalAccessTokenController@store',
-                'namespace' => '\Laravel\Passport\Http\Controllers'
-            ]);
-
-            $this->app->delete('/personal-access-tokens/{token_id}', [
-                'uses' => 'PersonalAccessTokenController@destroy',
-                'namespace' => '\Laravel\Passport\Http\Controllers'
-            ]);
+            $this->app->get('/scopes', $this->prefix('ScopeController@all'));
+            $this->app->get('/personal-access-tokens', $this->prefix('PersonalAccessTokenController@forUser'));
+            $this->app->post('/personal-access-tokens', $this->prefix('PersonalAccessTokenController@store'));
+            $this->app->delete('/personal-access-tokens/{token_id}', $this->prefix('PersonalAccessTokenController@destroy'));
         });
     }
 }
