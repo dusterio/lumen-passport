@@ -85,8 +85,8 @@ class LumenPassport
 
         $options = array_merge($defaultOptions, $options);
 
-        $callback->group(array_except($options, ['namespace']), function ($router) use ($callback) {
-            $routes = new RouteRegistrar($router);
+        $callback->group(array_except($options, ['namespace']), function ($router) use ($callback, $options) {
+            $routes = new RouteRegistrar($router, $options);
             $routes->all();
         });
     }
