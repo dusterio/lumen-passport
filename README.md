@@ -72,7 +72,7 @@ php artisan passport:install
 
 ### Installed routes
 
-Adding this service provider, will mount the following routes:
+This package mounts the following routes after you call routes() method (see instructions below):
 
 Verb | Path | NamedRoute | Controller | Action | Middleware
 --- | --- | --- | --- | --- | ---
@@ -121,16 +121,17 @@ return [
 
 ## Registering Routes
 
-Next, you should call the LumenPassport::routes method within the boot method of your application. This method will register the routes necessary to issue access tokens and revoke access tokens, clients, and personal access tokens:
+Next, you should call the LumenPassport::routes method within the boot method of your application (one of your service providers). 
+This method will register the routes necessary to issue access tokens and revoke access tokens, clients, and personal access tokens:
 
 ```php
-Dusterio\LumenPassport\LumenPassport::routes($app);
+Dusterio\LumenPassport\LumenPassport::routes($this->app->router);
 ```
 
 You can add that into an existing group, or add use this route registrar independently like so;
 
 ```php
-Dusterio\LumenPassport\LumenPassport::routes($app, ['prefix' => 'v1/oauth']);
+Dusterio\LumenPassport\LumenPassport::routes($this->app->router, ['prefix' => 'v1/oauth']);
 ```
 
 ## User model

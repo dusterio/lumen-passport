@@ -6,6 +6,8 @@ use Laravel\Passport\Passport;
 use DateTimeInterface;
 use DateInterval;
 use Carbon\Carbon;
+use Laravel\Lumen\Application;
+use Laravel\Lumen\Routing\Router;
 
 class LumenPassport
 {
@@ -64,11 +66,14 @@ class LumenPassport
     /**
      * Get a Passport route registrar.
      *
+     * @param  callable|Router|Application  $callback
      * @param  array  $options
      * @return RouteRegistrar
      */
     public static function routes($callback = null, array $options = [])
     {
+        if ($callback instanceof Application) $callback = $callback->router;
+
         $callback = $callback ?: function ($router) {
             $router->all();
         };
