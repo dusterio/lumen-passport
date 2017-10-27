@@ -119,6 +119,12 @@ return [
 ];
 ```
 
+Load the config in `bootstrap/app.php` since Lumen doesn't load config files automatically:
+
+```php
+$app->configure('auth');
+```
+
 ## Registering Routes
 
 Next, you should call the LumenPassport::routes method within the boot method of your application (one of your service providers). 
