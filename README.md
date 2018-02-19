@@ -201,17 +201,6 @@ RewriteCond %{HTTP:Authorization} ^(.*)
 RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
 ```
 
-## Workaround for Lumen 5.6
-
-Lumen 5.6 has a problem resolving HashManager class out of the box - Lumen refuses to resolve 'app' dependency through the
-service container. A quick workaround is to add a binding like following in any service provider:
-
-```php
-	    $this->app->singleton(\Illuminate\Hashing\HashManager::class, function ($app) {
-	        return new \Illuminate\Hashing\HashManager($app);
-	    });
-```
-
 ## License
 
 The MIT License (MIT)
