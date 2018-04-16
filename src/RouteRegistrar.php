@@ -57,11 +57,11 @@ class RouteRegistrar
      */
     public function forAccessTokens()
     {
-        $this->app->post('/token', $this->prefix('\Dusterio\LumenPassport\Http\Controllers\AccessTokenController@issueToken'));
+        $this->app->router->post('/token', $this->prefix('\Dusterio\LumenPassport\Http\Controllers\AccessTokenController@issueToken'));
 
-        $this->app->group(['middleware' => ['auth']], function () {
-            $this->app->get('/tokens', $this->prefix('AuthorizedAccessTokenController@forUser'));
-            $this->app->delete('/tokens/{token_id}', $this->prefix('AuthorizedAccessTokenController@destroy'));
+        $this->app->router->group(['middleware' => ['auth']], function () {
+            $this->app->router->get('/tokens', $this->prefix('AuthorizedAccessTokenController@forUser'));
+            $this->app->router->delete('/tokens/{token_id}', $this->prefix('AuthorizedAccessTokenController@destroy'));
         });
     }
 
@@ -72,7 +72,7 @@ class RouteRegistrar
      */
     public function forTransientTokens()
     {
-        $this->app->post('/token/refresh', [
+        $this->app->router->post('/token/refresh', [
             'middleware' => ['auth'],
             'uses' => $this->prefix('TransientTokenController@refresh')
         ]);
@@ -85,11 +85,11 @@ class RouteRegistrar
      */
     public function forClients()
     {
-        $this->app->group(['middleware' => ['auth']], function () {
-            $this->app->get('/clients', $this->prefix('ClientController@forUser'));
-            $this->app->post('/clients', $this->prefix('ClientController@store'));
-            $this->app->put('/clients/{client_id}', $this->prefix('ClientController@update'));
-            $this->app->delete('/clients/{client_id}', $this->prefix('ClientController@destroy'));
+        $this->app->router->group(['middleware' => ['auth']], function () {
+            $this->app->router->get('/clients', $this->prefix('ClientController@forUser'));
+            $this->app->router->post('/clients', $this->prefix('ClientController@store'));
+            $this->app->router->put('/clients/{client_id}', $this->prefix('ClientController@update'));
+            $this->app->router->delete('/clients/{client_id}', $this->prefix('ClientController@destroy'));
         });
     }
 
@@ -100,11 +100,11 @@ class RouteRegistrar
      */
     public function forPersonalAccessTokens()
     {
-        $this->app->group(['middleware' => ['auth']], function () {
-            $this->app->get('/scopes', $this->prefix('ScopeController@all'));
-            $this->app->get('/personal-access-tokens', $this->prefix('PersonalAccessTokenController@forUser'));
-            $this->app->post('/personal-access-tokens', $this->prefix('PersonalAccessTokenController@store'));
-            $this->app->delete('/personal-access-tokens/{token_id}', $this->prefix('PersonalAccessTokenController@destroy'));
+        $this->app->router->group(['middleware' => ['auth']], function () {
+            $this->app->router->get('/scopes', $this->prefix('ScopeController@all'));
+            $this->app->router->get('/personal-access-tokens', $this->prefix('PersonalAccessTokenController@forUser'));
+            $this->app->router->post('/personal-access-tokens', $this->prefix('PersonalAccessTokenController@store'));
+            $this->app->router->delete('/personal-access-tokens/{token_id}', $this->prefix('PersonalAccessTokenController@destroy'));
         });
     }
 }
