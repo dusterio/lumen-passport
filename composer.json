@@ -26,6 +26,9 @@
     "autoload": {
         "psr-4": {
             "Dusterio\\LumenPassport\\": "src/"
-        }
+        },
+         "files": [
+            "src/helpers.php"
+        ]
     }
 }
