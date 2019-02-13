@@ -19,7 +19,11 @@ class PassportServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton(Connection::class, function () {
-            return DB::connection(env('PASSPORT_CONNECTION', 'default'));
+            $conn = env('PASSPORT_CONNECTION');
+            if ($conn != null) {
+                return DB::connection($conn);
+            }
+            return $this->app['db.connection'];
         });
 
         if (preg_match('/5\.[67]\.\d+/', $this->app->version())) {
