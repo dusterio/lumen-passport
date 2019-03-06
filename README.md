@@ -134,10 +134,20 @@ This method will register the routes necessary to issue access tokens and revoke
 \Dusterio\LumenPassport\LumenPassport::routes($this->app);
 ```
 
+Lumen 5.5+
+```php
+\Dusterio\LumenPassport\LumenPassport::routes($this->app->router);
+```
+
 You can add that into an existing group, or add use this route registrar independently like so;
 
 ```php
 \Dusterio\LumenPassport\LumenPassport::routes($this->app, ['prefix' => 'v1/oauth']);
+```
+
+Lumen 5.5+
+```php
+\Dusterio\LumenPassport\LumenPassport::routes($this->app->router, ['prefix' => 'v1/oauth']);
 ```
 
 ## User model
