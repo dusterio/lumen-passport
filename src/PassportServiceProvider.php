@@ -23,7 +23,7 @@ class PassportServiceProvider extends ServiceProvider
             return $this->app['db.connection'];
         });
 
-        if (preg_match('/5\.[67]\.\d+/', $this->app->version())) {
+        if (preg_match('/5\.[678]\.\d+/', $this->app->version())) {
             $this->app->singleton(\Illuminate\Hashing\HashManager::class, function ($app) {
                 return new \Illuminate\Hashing\HashManager($app);
             });
