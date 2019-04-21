@@ -72,7 +72,7 @@ class LumenPassport
      */
     public static function routes($callback = null, array $options = [])
     {
-        if ($callback instanceof Application && preg_match('/5\.[5-7]\..*/', $callback->version())) $callback = $callback->router;
+        if ($callback instanceof Application && preg_match('/5\.[5-8]\..*/', $callback->version())) $callback = $callback->router;
 
         $callback = $callback ?: function ($router) {
             $router->all();
