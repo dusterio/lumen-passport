@@ -34,7 +34,7 @@ Or if you prefer, edit `composer.json` manually:
 ```json
 {
     "require": {
-        "dusterio/lumen-passport": "^0.1.7"
+        "dusterio/lumen-passport": "^0.2.0"
     }
 }
 ```
@@ -72,7 +72,7 @@ php artisan passport:install
 
 ### Installed routes
 
-Adding this service provider, will mount the following routes:
+This package mounts the following routes after you call routes() method (see instructions below):
 
 Verb | Path | NamedRoute | Controller | Action | Middleware
 --- | --- | --- | --- | --- | ---
@@ -119,12 +119,32 @@ return [
 ];
 ```
 
+Load the config in `bootstrap/app.php` since Lumen doesn't load config files automatically:
+
+```php
+$app->configure('auth');
+```
+
 ## Registering Routes
 
-Next, you should call the LumenPassport::routes method within the boot method of your application. This method will register the routes necessary to issue access tokens and revoke access tokens, clients, and personal access tokens:
+Next, you should call the LumenPassport::routes method within the boot method of your application (one of your service providers). 
+This method will register the routes necessary to issue access tokens and revoke access tokens, clients, and personal access tokens:
 
 ```php
 Dusterio\LumenPassport\LumenPassport::routes();
+```
+
+Use de `$callback` parameter to customize which endpoints will be enabled:
+
+```php
+Dusterio\LumenPassport\LumenPassport::routes(function ($router) {
+    // call just what you need of these functions
+    // all defined in Dusterio\LumenPassport\RouteRegistrar
+    $router->forAccessTokens();
+    $router->forTransientTokens();
+    $router->forClients();
+    $router->forPersonalAccessTokens();
+});
 ```
 
 You can add that into an existing group, or add use this route registrar independently like so;

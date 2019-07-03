@@ -2,10 +2,9 @@
 
 namespace Dusterio\LumenPassport;
 
-use Laravel\Passport\Passport;
-use DateTimeInterface;
-use DateInterval;
 use Carbon\Carbon;
+use DateTimeInterface;
+use Laravel\Passport\Passport;
 use Illuminate\Support\Facades\Route;
 
 class LumenPassport
@@ -65,9 +64,9 @@ class LumenPassport
     /**
      * Get a Passport route registrar.
      *
-     * @param  callable|null                 $callback
-     * @param  array                         $options
-     * @return RouteRegistrar
+     * @param  callable|null  $callback
+     * @param  array          $options
+     * @return void
      */
     public static function routes($callback = null, array $options = [])
     {
@@ -82,8 +81,8 @@ class LumenPassport
 
         $options = array_merge($defaultOptions, $options);
 
-        Route::group($options, function ($router) use ($callback) {
-            $callback(new RouteRegistrar($router));
+        Route::group(array_except($options, ['namespace']), function ($router) use ($callback, $options) {
+            $callback(new RouteRegistrar($router, $options));
         });
     }
 }
