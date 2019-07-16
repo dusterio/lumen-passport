@@ -27,16 +27,6 @@ class ProxyApplication implements \ArrayAccess {
     }
 
     /**
-     * @param string $symbol
-     * @param callable|mixed $callback
-     * @return mixed
-     */
-    public function singleton($symbol, $callback)
-    {
-        return $this->app->singleton($symbol, $callback);
-    }
-
-    /**
      * Determine if a given offset exists.
      *
      * @param  string  $key
@@ -102,5 +92,15 @@ class ProxyApplication implements \ArrayAccess {
     public function __set($key, $value)
     {
         $this->app[$key] = $value;
+    }
+
+    /**
+     * @param $name
+     * @param $args
+     * @return mixed
+     */
+    public function __call($name, $args)
+    {
+        return call_user_func_array([$this->app, $name], $args);
     }
 }
