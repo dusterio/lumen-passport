@@ -55,7 +55,8 @@ $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
 ]);
 
-// Finally register a service provider of the Lumen adapter
+// Finally register two service providers - original one and Lumen adapter
+$app->register(Laravel\Passport\PassportServiceProvider::class);
 $app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
 ```
 
