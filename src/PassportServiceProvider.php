@@ -3,6 +3,7 @@
 namespace Dusterio\LumenPassport;
 
 use Dusterio\LumenPassport\Console\Commands\Purge;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Connection;
 
@@ -13,13 +14,15 @@ use Illuminate\Database\Connection;
 class PassportServiceProvider extends ServiceProvider
 {
     /**
-     * Bootstrap any application services.
-     *
      * @return void
      */
-    public function boot()
+    public function register()
     {
-        $this->app->singleton(Connection::class, function() {
+        $this->app->singleton(Connection::class, function () {
+            $conn = env('PASSPORT_CONNECTION');
+            if ($conn != null) {
+                return DB::connection($conn);
+            }
             return $this->app['db.connection'];
         });
 
@@ -35,10 +38,13 @@ class PassportServiceProvider extends ServiceProvider
             ]);
         }
     }
+
     /**
+     * Bootstrap any application services.
+     *
      * @return void
      */
-    public function register()
+    public function boot()
     {
     }
 }
