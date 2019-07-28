@@ -5,9 +5,9 @@ namespace Dusterio\LumenPassport;
 class RouteRegistrar
 {
     /**
-     * @var Application
+     * @var \Laravel\Lumen\Routing\Router Router
      */
-    private $app;
+    private $router;
 
     /**
      * @var array
@@ -17,12 +17,13 @@ class RouteRegistrar
     /**
      * Create a new route registrar instance.
      *
-     * @param  $app
+     * @param  \Laravel\Lumen\Routing\Router $router
      * @param  array $options
+     * @return void
      */
-    public function __construct($app, array $options = [])
+    public function __construct(\Laravel\Lumen\Routing\Router $router, array $options = [])
     {
-        $this->app = $app;
+        $this->router = $router;
         $this->options = $options;
     }
 
@@ -57,11 +58,11 @@ class RouteRegistrar
      */
     public function forAccessTokens()
     {
-        $this->app->post('/token', $this->prefix('\Dusterio\LumenPassport\Http\Controllers\AccessTokenController@issueToken'));
+        $this->router->post('/token', $this->prefix('\Dusterio\LumenPassport\Http\Controllers\AccessTokenController@issueToken'));
 
-        $this->app->group(['middleware' => ['auth']], function () {
-            $this->app->get('/tokens', $this->prefix('AuthorizedAccessTokenController@forUser'));
-            $this->app->delete('/tokens/{token_id}', $this->prefix('AuthorizedAccessTokenController@destroy'));
+        $this->router->group(['middleware' => ['auth']], function () {
+            $this->router->get('/tokens', $this->prefix('AuthorizedAccessTokenController@forUser'));
+            $this->router->delete('/tokens/{token_id}', $this->prefix('AuthorizedAccessTokenController@destroy'));
         });
     }
 
@@ -72,7 +73,7 @@ class RouteRegistrar
      */
     public function forTransientTokens()
     {
-        $this->app->post('/token/refresh', [
+        $this->router->post('/token/refresh', [
             'middleware' => ['auth'],
             'uses' => $this->prefix('TransientTokenController@refresh')
         ]);
@@ -85,11 +86,11 @@ class RouteRegistrar
      */
     public function forClients()
     {
-        $this->app->group(['middleware' => ['auth']], function () {
-            $this->app->get('/clients', $this->prefix('ClientController@forUser'));
-            $this->app->post('/clients', $this->prefix('ClientController@store'));
-            $this->app->put('/clients/{client_id}', $this->prefix('ClientController@update'));
-            $this->app->delete('/clients/{client_id}', $this->prefix('ClientController@destroy'));
+        $this->router->group(['middleware' => ['auth']], function () {
+            $this->router->get('/clients', $this->prefix('ClientController@forUser'));
+            $this->router->post('/clients', $this->prefix('ClientController@store'));
+            $this->router->put('/clients/{client_id}', $this->prefix('ClientController@update'));
+            $this->router->delete('/clients/{client_id}', $this->prefix('ClientController@destroy'));
         });
     }
 
@@ -100,11 +101,11 @@ class RouteRegistrar
      */
     public function forPersonalAccessTokens()
     {
-        $this->app->group(['middleware' => ['auth']], function () {
-            $this->app->get('/scopes', $this->prefix('ScopeController@all'));
-            $this->app->get('/personal-access-tokens', $this->prefix('PersonalAccessTokenController@forUser'));
-            $this->app->post('/personal-access-tokens', $this->prefix('PersonalAccessTokenController@store'));
-            $this->app->delete('/personal-access-tokens/{token_id}', $this->prefix('PersonalAccessTokenController@destroy'));
+        $this->router->group(['middleware' => ['auth']], function () {
+            $this->router->get('/scopes', $this->prefix('ScopeController@all'));
+            $this->router->get('/personal-access-tokens', $this->prefix('PersonalAccessTokenController@forUser'));
+            $this->router->post('/personal-access-tokens', $this->prefix('PersonalAccessTokenController@store'));
+            $this->router->delete('/personal-access-tokens/{token_id}', $this->prefix('PersonalAccessTokenController@destroy'));
         });
     }
 }
