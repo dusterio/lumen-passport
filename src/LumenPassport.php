@@ -26,6 +26,20 @@ class LumenPassport
     public static $tokensExpireAt = [];
 
     /**
+     * The date when refresh tokens expire.
+     *
+     * @var \DateTimeInterface|null
+     */
+    public static $refreshTokensExpireAt;
+
+    /**
+     * The date when personal access tokens expire.
+     *
+     * @var \DateTimeInterface|null
+     */
+    public static $personalAccessTokensExpireAt;
+
+    /**
      * Instruct Passport to keep revoked tokens pruned.
      */
     public static function allowMultipleTokens()
@@ -56,9 +70,53 @@ class LumenPassport
             return isset(static::$tokensExpireAt[$clientId])
                 ? Carbon::now()->diff(static::$tokensExpireAt[$clientId])
                 : Passport::tokensExpireIn();
-        } else {
-            static::$tokensExpireAt[$clientId] = $date;
         }
+
+        static::$tokensExpireAt[$clientId] = $date;
+
+        return new static;
+    }
+
+    /**
+     * Get or set when refresh tokens expire.
+     *
+     * @param  \DateTimeInterface|null  $date
+     * @param int $clientId
+     * @return \DateInterval|static
+     */
+    public static function refreshTokensExpireIn(DateTimeInterface $date = null, $clientId = null)
+    {
+        if (! $clientId) return Passport::refreshTokensExpireIn($date);
+
+        if (is_null($date)) {
+            return isset(static::$refreshTokensExpireAt[$clientId])
+                ? Carbon::now()->diff(static::$refreshTokensExpireAt[$clientId])
+                : Passport::refreshTokensExpireIn();
+        }
+
+        static::$refreshTokensExpireAt[$clientId] = $date;
+
+        return new static;
+    }
+
+    /**
+     * Get or set when personal access tokens expire.
+     *
+     * @param  \DateTimeInterface|null  $date
+     * @param int $clientId
+     * @return \DateInterval|static
+     */
+    public static function personalAccessTokensExpireIn(DateTimeInterface $date = null, $clientId = null)
+    {
+        if (! $clientId) return Passport::personalAccessTokensExpireIn($date);
+
+        if (is_null($date)) {
+            return isset(static::$personalAccessTokensExpireAt[$clientId])
+                ? Carbon::now()->diff(static::$personalAccessTokensExpireAt[$clientId])
+                : Passport::personalAccessTokensExpireIn();
+        }
+
+        static::$personalAccessTokensExpireAt[$clientId] = $date;
 
         return new static;
     }

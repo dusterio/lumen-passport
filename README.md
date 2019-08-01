@@ -172,7 +172,7 @@ LumenPassport::allowMultipleTokens();
 
 ### Different TTLs for different password clients
 
-Laravel Passport allows to set one global TTL for access tokens, but it may be useful sometimes
+Laravel Passport allows to set one global TTL for tokens or refresh tokens or personal access tokens, but it may be useful sometimes
 to set different TTLs for different clients (eg. mobile users get more time than desktop users).
 
 Simply do the following in your service provider:
@@ -180,6 +180,8 @@ Simply do the following in your service provider:
 ```php
 // Second parameter is the client Id
 LumenPassport::tokensExpireIn(Carbon::now()->addYears(50), 2); 
+LumenPassport::refreshTokensExpireIn(Carbon::now()->addMinutes(30), 4); 
+LumenPassport::personalAccessTokensExpireIn(Carbon::now()->addHours(1), 5); 
 ```
 
 If you don't specify client Id, it will simply fall back to Laravel Passport implementation.
