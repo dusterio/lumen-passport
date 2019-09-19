@@ -2,9 +2,9 @@
 
 namespace Dusterio\LumenPassport;
 
+use Illuminate\Support\Arr;
 use Laravel\Passport\Passport;
 use DateTimeInterface;
-use DateInterval;
 use Carbon\Carbon;
 use Laravel\Lumen\Application;
 use Laravel\Lumen\Routing\Router;
@@ -85,7 +85,7 @@ class LumenPassport
 
         $options = array_merge($defaultOptions, $options);
 
-        $callback->group(array_except($options, ['namespace']), function ($router) use ($callback, $options) {
+        $callback->group(Arr::except($options, ['namespace']), function ($router) use ($callback, $options) {
             $routes = new RouteRegistrar($router, $options);
             $routes->all();
         });
