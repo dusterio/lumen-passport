@@ -38,7 +38,7 @@ class LumenPassport
      */
     public static function prunePreviousTokens()
     {
-        Passport::pruneRevokedTokens();
+        Passport::$pruneRevokedTokens = true;
     }
 
     /**
