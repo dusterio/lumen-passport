@@ -56,7 +56,7 @@ $app->routeMiddleware([
 ]);
 
 // Finally register two service providers - original one and Lumen adapter
-// note: no need to register Laravel\Passport\PassportServiceProvider, since this is override by the own provider
+$app->register(Laravel\Passport\PassportServiceProvider::class);
 $app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
 ```
 
