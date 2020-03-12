@@ -2,17 +2,16 @@
 
 namespace Dusterio\LumenPassport\Tests;
 
-use Dusterio\LumenPassport\Http\Controllers\AccessTokenController;
-use Dusterio\LumenPassport\LumenPassport;
 use Carbon\Carbon;
+use Dusterio\LumenPassport\LumenPassport;
 use Laravel\Passport\Passport;
-use Laravel\Passport\PassportServiceProvider;
+use PHPUnit\Framework\TestCase as BaseTestCase;
 
 /**
  * Class IntegrationTest
  * @package Dusterio\LumenPassport\Tests
  */
-class IntegrationTest extends \PHPUnit_Framework_TestCase
+class IntegrationTest extends BaseTestCase
 {
     /**
      * @test
