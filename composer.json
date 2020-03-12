@@ -16,8 +16,7 @@
         "php": "^7.2.5",
         "ext-json": "*",
         "laravel/lumen-framework": "^7.0",
-        "laravel/passport": "^8.4",
-        "zendframework/zend-diactoros": "^2.2"
+        "laravel/passport": "^8.4"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.9",
