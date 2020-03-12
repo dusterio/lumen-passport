@@ -56,7 +56,7 @@ $app->routeMiddleware([
 ]);
 
 // Finally register two service providers - original one and Lumen adapter
-$app->register(Laravel\Passport\PassportServiceProvider::class);
+// note: no need to register Laravel\Passport\PassportServiceProvider, since this is override by the own provider
 $app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
 ```
 
@@ -113,7 +113,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => \App\User::class
+            'model' => User::class
         ]
     ]
 ];
@@ -131,13 +131,13 @@ Next, you should call the LumenPassport::routes method within the boot method of
 This method will register the routes necessary to issue access tokens and revoke access tokens, clients, and personal access tokens:
 
 ```php
-\Dusterio\LumenPassport\LumenPassport::routes($this->app);
+use Dusterio\LumenPassport\LumenPassport;LumenPassport::routes($this->app);
 ```
 
 You can add that into an existing group, or add use this route registrar independently like so;
 
 ```php
-\Dusterio\LumenPassport\LumenPassport::routes($this->app, ['prefix' => 'v1/oauth']);
+use Dusterio\LumenPassport\LumenPassport;LumenPassport::routes($this->app, ['prefix' => 'v1/oauth']);
 ```
 
 ## User model
