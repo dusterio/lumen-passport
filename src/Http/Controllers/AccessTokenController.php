@@ -2,14 +2,18 @@
 
 namespace Dusterio\LumenPassport\Http\Controllers;
 
+use Dusterio\LumenPassport\LumenPassport;
+use Laravel\Passport\Bridge\RefreshTokenRepository;
+use Laravel\Passport\Bridge\UserRepository;
 use Laravel\Passport\Passport;
 use Laravel\Passport\Token;
-use Zend\Diactoros\Response as Psr7Response;
+use League\OAuth2\Server\Grant\PasswordGrant;
 use Psr\Http\Message\ServerRequestInterface;
-use Dusterio\LumenPassport\LumenPassport;
+use Zend\Diactoros\Response as Psr7Response;
 
 /**
  * Class AccessTokenController
+ *
  * @package Dusterio\LumenPassport\Http\Controllers
  */
 class AccessTokenController extends \Laravel\Passport\Http\Controllers\AccessTokenController
@@ -17,13 +21,15 @@ class AccessTokenController extends \Laravel\Passport\Http\Controllers\AccessTok
     /**
      * Authorize a client to access the user's account.
      *
-     * @param  ServerRequestInterface  $request
-     * @return Response
+     * @param  \Psr\Http\Message\ServerRequestInterface  $request
+     *
+     * @return \Illuminate\Http\Response|mixed
+     * @throws \Laravel\Passport\Exceptions\OAuthServerException
      */
     public function issueToken(ServerRequestInterface $request)
     {
         $response = $this->withErrorHandling(function () use ($request) {
-            $input = (array) $request->getParsedBody();
+            $input    = (array) $request->getParsedBody();
             $clientId = isset($input['client_id']) ? $input['client_id'] : null;
 
             // Overwrite password grant at the last minute to add support for customized TTLs
@@ -42,7 +48,7 @@ class AccessTokenController extends \Laravel\Passport\Http\Controllers\AccessTok
 
         if (isset($payload['access_token'])) {
             $tokenId = $this->jwt->parse($payload['access_token'])->getClaim('jti');
-            $token = $this->tokens->find($tokenId);
+            $token   = $this->tokens->find($tokenId);
 
             if ($token->client->firstParty() && LumenPassport::$allowMultipleTokens) {
                 // We keep previous tokens for password clients
@@ -61,9 +67,9 @@ class AccessTokenController extends \Laravel\Passport\Http\Controllers\AccessTok
      */
     private function makePasswordGrant()
     {
-        $grant = new \League\OAuth2\Server\Grant\PasswordGrant(
-            app()->make(\Laravel\Passport\Bridge\UserRepository::class),
-            app()->make(\Laravel\Passport\Bridge\RefreshTokenRepository::class)
+        $grant = new PasswordGrant(
+            app()->make(UserRepository::class),
+            app()->make(RefreshTokenRepository::class)
         );
 
         $grant->setRefreshTokenTTL(Passport::refreshTokensExpireIn());
@@ -74,9 +80,8 @@ class AccessTokenController extends \Laravel\Passport\Http\Controllers\AccessTok
     /**
      * Revoke the user's other access tokens for the client.
      *
-     * @param  Token $token
-     * @param  string $tokenId
-     * @return void
+     * @param  \Laravel\Passport\Token  $token
+     * @param $tokenId
      */
     protected function revokeOrDeleteAccessTokens(Token $token, $tokenId)
     {
