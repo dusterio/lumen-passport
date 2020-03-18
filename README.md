@@ -60,6 +60,21 @@ $app->register(Laravel\Passport\PassportServiceProvider::class);
 $app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
 ```
 
+### Using with Laravel Passport 7.3.2 and newer
+
+Laravel Passport 7.3.2 had a breaking change - new method introduced on Application class that
+exists in Laravel but not in Lumen. You could either lock in to an older version or 
+swap the Application class like follows at the top of your ```bootstrap/app.php``` file:
+
+```php
+$app = new \Dusterio\LumenPassport\Lumen7Application(
+    dirname(__DIR__)
+);
+```
+
+If you look inside this class - all it does is adding an extra method configurationIsCached() that always
+returns false.
+
 ### Migrate and install Laravel Passport
 
 ```bash
