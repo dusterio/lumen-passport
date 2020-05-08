@@ -86,10 +86,6 @@ class AccessTokenController extends \Laravel\Passport\Http\Controllers\AccessTok
             $query->where('id', '<>', $tokenId);
         }
 
-        if (Passport::$pruneRevokedTokens) {
-            $query->delete();
-        } else {
-            $query->update(['revoked' => true]);
-        }
+        $query->update(['revoked' => true]);
     }
 }
