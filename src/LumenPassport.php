@@ -34,14 +34,6 @@ class LumenPassport
     }
 
     /**
-     * Delete older tokens or just mark them as revoked?
-     */
-    public static function prunePreviousTokens()
-    {
-        Passport::$pruneRevokedTokens = true;
-    }
-
-    /**
      * Get or set when access tokens expire.
      *
      * @param  \DateTimeInterface|null  $date
