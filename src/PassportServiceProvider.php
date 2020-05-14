@@ -3,8 +3,10 @@
 namespace Dusterio\LumenPassport;
 
 use Dusterio\LumenPassport\Console\Commands\Purge;
+use Illuminate\Contracts\Config\Repository;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Connection;
+use Laravel\Passport\Passport;
 
 /**
  * Class CustomQueueServiceProvider
@@ -40,5 +42,8 @@ class PassportServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        if ($this->app['config'] instanceof Repository && method_exists(Passport::class, 'setClientUuids')) {
+            Passport::setClientUuids($this->app['config']->get('passport.client_uuids', false));
+        }
     }
 }

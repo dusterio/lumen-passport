@@ -170,7 +170,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
 ## Extra features
 
-There are a couple of extra features that aren't present in Laravel Passport
+There are a couple of extra features that aren't present in Laravel Passport or need some manual adjustments in order to work.
 
 ### Allowing multiple tokens per client
 
@@ -203,6 +203,14 @@ If you don't specify client Id, it will simply fall back to Laravel Passport imp
 
 Simply run ```php artisan passport:purge``` to remove expired refresh tokens and their corresponding access tokens from the database.
 
+### Automatic configuration of client UUIDs (Laravel Passport 8.5 feature)
+
+In case you want to use UUIDs instead of numeric client IDs you might be interested in the native support introduced in [Laravel Passport 8.5](https://github.com/laravel/passport/pull/1231).
+In order to achieve this, please follow the following steps:
+* make sure you are using passport version `^8.5` and `ramsey/uuid` version `^4.0`
+* copy the default passport config into your Lumen config directory and set the `client_uuids` option to `true`
+* configure the new custom passport config in your `bootstrap/app.php`
+* manually apply the required database changes as listed in the `Laravel\Passport\Console\InstallCommand::configureUuids` method
 
 ## Running with Apache httpd
 
