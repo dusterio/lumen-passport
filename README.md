@@ -220,6 +220,8 @@ RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
 
 I've just started a educational YouTube channel that will cover top IT trends in software development and DevOps: [config.sys](https://www.youtube.com/channel/UCIvUJ1iVRjJP_xL0CD7cMpg)
 
+Also I'm happy to announce my newest tool – [GrammarCI](https://www.grammarci.com/), an automated (as a part of CI/CD process) spelling and grammar checks for your code so that your users don't see your typos :)
+
 ## License
 
 The MIT License (MIT)
