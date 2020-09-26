@@ -34,7 +34,7 @@ Or if you prefer, edit `composer.json` manually:
 ```json
 {
     "require": {
-        "dusterio/lumen-passport": "^0.2.0"
+        "dusterio/lumen-passport": "^0.3.0"
     }
 }
 ```

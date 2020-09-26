@@ -4,7 +4,7 @@ namespace Dusterio\LumenPassport\Http\Controllers;
 
 use Laravel\Passport\Passport;
 use Laravel\Passport\Token;
-use Zend\Diactoros\Response as Psr7Response;
+use Laminas\Diactoros\Response as Psr7Response;
 use Psr\Http\Message\ServerRequestInterface;
 use Dusterio\LumenPassport\LumenPassport;
 
