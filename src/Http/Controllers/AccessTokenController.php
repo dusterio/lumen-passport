@@ -41,8 +41,20 @@ class AccessTokenController extends \Laravel\Passport\Http\Controllers\AccessTok
         $payload = json_decode($response->getBody()->__toString(), true);
 
         if (isset($payload['access_token'])) {
-            $tokenId = $this->jwt->parse($payload['access_token'])->getClaim('jti');
+            /* @deprecated the jwt property will be removed in a future Laravel Passport release */
+            $token = $this->jwt->parse($payload['access_token']);
+            if (method_exists($token, 'getClaim')) {
+                $tokenId = $token->getClaim('jti');
+            } else if (method_exists($token, 'claims')) {
+                $tokenId = $token->claims()->get('jti');
+            } else {
+                throw new \RuntimeException('This package is not compatible to the used Laravel Passport version.');
+            }
+
             $token = $this->tokens->find($tokenId);
+            if (!$token instanceof Token) {
+                return $response;
+            }
 
             if ($token->client->firstParty() && LumenPassport::$allowMultipleTokens) {
                 // We keep previous tokens for password clients
