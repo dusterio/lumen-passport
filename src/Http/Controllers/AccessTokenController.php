@@ -48,7 +48,7 @@ class AccessTokenController extends \Laravel\Passport\Http\Controllers\AccessTok
             } else if (method_exists($token, 'claims')) {
                 $tokenId = $token->claims()->get('jti');
             } else {
-                throw new \RuntimeException('This package is not compatible to the used Laravel Passport version.');
+                throw new \RuntimeException('This package is not compatible with the Laravel Passport version used');
             }
 
             $token = $this->tokens->find($tokenId);
