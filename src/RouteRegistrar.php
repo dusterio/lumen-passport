@@ -45,7 +45,9 @@ class RouteRegistrar
      */
     private function prefix($path)
     {
-        if (strstr($path, '\\') === false && isset($this->options['namespace'])) return $this->options['namespace'] . '\\' . $path;
+        if (strstr($path, '\\') === false && isset($this->options['namespace'])) {
+            return $this->options['namespace'] . '\\' . $path;
+        }
 
         return $path;
     }
@@ -104,7 +106,7 @@ class RouteRegistrar
             $this->app->get('/scopes', $this->prefix('ScopeController@all'));
             $this->app->get('/personal-access-tokens', $this->prefix('PersonalAccessTokenController@forUser'));
             $this->app->post('/personal-access-tokens', $this->prefix('PersonalAccessTokenController@store'));
-            $this->app->delete('/personal-access-tokens/{token_id}', $this->prefix('PersonalAccessTokenController@destroy'));
+            $this->app->delete('/personal-access-tokens/{tokenId}', $this->prefix('PersonalAccessTokenController@destroy'));
         });
     }
 }
