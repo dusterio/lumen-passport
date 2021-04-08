@@ -77,6 +77,8 @@ returns false.
 
 ### Migrate and install Laravel Passport
 
+Before installing Passport, make sure you have the [configuration](#configuration) file for auth in place.
+
 ```bash
 # Create new tables for Passport
 php artisan migrate
