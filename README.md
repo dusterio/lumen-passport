@@ -160,6 +160,9 @@ You can add that into an existing group, or add use this route registrar indepen
 Make sure your user model uses Passport's ```HasApiTokens``` trait, eg.:
 
 ```php
+//without the use it generates this error -> Call to undefined method App\Models\User::withAccessToken()
+use Laravel\Passport\HasApiTokens;
+
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
     use HasApiTokens, Authenticatable, Authorizable;
