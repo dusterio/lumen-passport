@@ -5,12 +5,11 @@ cache:
     - $HOME/.composer/cache
 
 php:
-  - '5.6'
-  - '7.0'
+  - '7.1'
+  - '8.1'
 
 before_script:
   - composer install --dev
 
 script:
   - ./vendor/bin/phpunit
-  - ./vendor/bin/test-reporter
