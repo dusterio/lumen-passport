@@ -178,7 +178,6 @@ curl --location --request POST '{{APP_URL}}/oauth/token' \
 ```
 
 ```json
-// response
 {
     "token_type": "Bearer",
     "expires_in": 31536000,
@@ -202,7 +201,6 @@ curl --location --request GET '{{APP_URL}}/ping' \
 ```
 
 ```html
-<!-- response -->
 pong
 ```
 
