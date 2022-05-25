@@ -1,4 +1,5 @@
-# lumen-passport
+# Lumen Passport
+
 [![Build Status](https://travis-ci.org/dusterio/lumen-passport.svg)](https://travis-ci.org/dusterio/lumen-passport)
 [![Code Climate](https://codeclimate.com/github/dusterio/lumen-passport/badges/gpa.svg)](https://codeclimate.com/github/dusterio/lumen-passport/badges)
 [![Total Downloads](https://poser.pugx.org/dusterio/lumen-passport/d/total.svg)](https://packagist.org/packages/dusterio/lumen-passport)
@@ -6,44 +7,39 @@
 [![Latest Unstable Version](https://poser.pugx.org/dusterio/lumen-passport/v/unstable.svg)](https://packagist.org/packages/dusterio/lumen-passport)
 [![License](https://poser.pugx.org/dusterio/lumen-passport/license.svg)](https://packagist.org/packages/dusterio/lumen-passport)
 
-Making Laravel Passport work with Lumen
+> Making Laravel Passport work with Lumen
 
-A simple service provider that makes Laravel Passport work with Lumen
+## Introduction
 
-## Dependencies
+It's a simple service provider that makes **Laravel Passport** work with **Lumen**.
 
-* PHP >= 5.6.3
-* Lumen >= 5.3
+## Installation
 
-## Installation via Composer
+First install [Lumen Micro-Framework](https://github.com/laravel/lumen) if you don't have it yet.
 
-First install Lumen if you don't have it yet:
-```bash
-$ composer create-project --prefer-dist laravel/lumen lumen-app
-```
-
-Then install Lumen Passport (it will fetch Laravel Passport along):
+Then install **Lumen Passport**:
 
 ```bash
-$ cd lumen-app
-$ composer require dusterio/lumen-passport
+composer require dusterio/lumen-passport
 ```
 
-Or if you prefer, edit `composer.json` manually:
+Or if you prefer, edit `composer.json` manually and run then `composer update`:
 
 ```json
 {
     "require": {
-        "dusterio/lumen-passport": "^0.3.0"
+        "dusterio/lumen-passport": "^0.3.5"
     }
 }
 ```
 
-### Modify the bootstrap flow (```bootstrap/app.php``` file)
+### Modify the bootstrap flow
 
-We need to enable both Laravel Passport provider and Lumen-specific provider:
+We need to enable both **Laravel Passport** provider and **Lumen Passport** specific provider:
 
 ```php
+/** @file bootstrap/app.php */
+
 // Enable Facades
 $app->withFacades();
 
@@ -55,25 +51,27 @@ $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
 ]);
 
-// Finally register two service providers - original one and Lumen adapter
+// Register two service providers, Laravel Passport and Lumen adapter
 $app->register(Laravel\Passport\PassportServiceProvider::class);
 $app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
 ```
 
-### Using with Laravel Passport 7.3.2 and newer
+### Laravel Passport ^7.3.2 and newer
 
-Laravel Passport 7.3.2 had a breaking change - new method introduced on Application class that
-exists in Laravel but not in Lumen. You could either lock in to an older version or 
-swap the Application class like follows at the top of your ```bootstrap/app.php``` file:
+On 30 Jul 2019 [Laravel Passport 7.3.2](https://github.com/laravel/passport/releases/tag/v7.3.2) had a breaking change - new method introduced on Application class that exists in Laravel but not in Lumen. You could either lock in to an older version or swap the Application class like follows:
 
 ```php
+/** @file bootstrap/app.php */
+
+//$app = new Laravel\Lumen\Application(
+//    dirname(__DIR__)
+//);
 $app = new \Dusterio\LumenPassport\Lumen7Application(
     dirname(__DIR__)
 );
 ```
 
-If you look inside this class - all it does is adding an extra method configurationIsCached() that always
-returns false.
+\* _Note: If you look inside this class - all it does is adding an extra method `configurationIsCached()` that always returns `false`._
 
 ### Migrate and install Laravel Passport
 
@@ -81,144 +79,242 @@ returns false.
 # Create new tables for Passport
 php artisan migrate
 
-# Install encryption keys and other necessary stuff for Passport
+# Install encryption keys and other stuff for Passport
 php artisan passport:install
 ```
 
-### Installed routes
+It will output the Personal access client ID and secret, and the Password grand client ID and secret.
 
-This package mounts the following routes after you call routes() method (see instructions below):
-
-Verb | Path | NamedRoute | Controller | Action | Middleware
---- | --- | --- | --- | --- | ---
-POST   | /oauth/token                             |            | \Laravel\Passport\Http\Controllers\AccessTokenController           | issueToken | -
-GET    | /oauth/tokens                            |            | \Laravel\Passport\Http\Controllers\AuthorizedAccessTokenController | forUser    | auth
-DELETE | /oauth/tokens/{token_id}                 |            | \Laravel\Passport\Http\Controllers\AuthorizedAccessTokenController | destroy    | auth
-POST   | /oauth/token/refresh                     |            | \Laravel\Passport\Http\Controllers\TransientTokenController        | refresh    | auth
-GET    | /oauth/clients                           |            | \Laravel\Passport\Http\Controllers\ClientController                | forUser    | auth
-POST   | /oauth/clients                           |            | \Laravel\Passport\Http\Controllers\ClientController                | store      | auth
-PUT    | /oauth/clients/{client_id}               |            | \Laravel\Passport\Http\Controllers\ClientController                | update     | auth
-DELETE | /oauth/clients/{client_id}               |            | \Laravel\Passport\Http\Controllers\ClientController                | destroy    | auth
-GET    | /oauth/scopes                            |            | \Laravel\Passport\Http\Controllers\ScopeController                 | all        | auth
-GET    | /oauth/personal-access-tokens            |            | \Laravel\Passport\Http\Controllers\PersonalAccessTokenController   | forUser    | auth
-POST   | /oauth/personal-access-tokens            |            | \Laravel\Passport\Http\Controllers\PersonalAccessTokenController   | store      | auth
-DELETE | /oauth/personal-access-tokens/{token_id} |            | \Laravel\Passport\Http\Controllers\PersonalAccessTokenController   | destroy    | auth
-
-Please note that some of the Laravel Passport's routes had to 'go away' because they are web-related and rely on sessions (eg. authorise pages). Lumen is an
-API framework so only API-related routes are present.
+\* _Note: Save the secrets in a safe place, you'll need them later to request the access tokens._
 
 ## Configuration
 
-Edit config/auth.php to suit your needs. A simple example:
+### Configure Authentication
+
+Edit `config/auth.php` to suit your needs. A simple example:
 
 ```php
-return [
-    'defaults' => [
-        'guard' => 'api',
-        'passwords' => 'users',
-    ],
+/** @file config/auth.php */
 
-    'guards' => [
-        'api' => [
-            'driver' => 'passport',
-            'provider' => 'users',
-        ],
-    ],
+return [
 
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => \App\User::class
+            'model' => \App\Models\User::class
         ]
-    ]
+    ],
+
 ];
 ```
 
-Load the config in `bootstrap/app.php` since Lumen doesn't load config files automatically:
+\* _Note: Lumen 7.x and older uses `\App\User::class`_
+
+Load the config since Lumen doesn't load config files automatically:
 
 ```php
+/** @file bootstrap/app.php */
+
 $app->configure('auth');
 ```
 
-## Registering Routes
+### Registering Routes
 
-Next, you should call the LumenPassport::routes method within the boot method of your application (one of your service providers). 
-This method will register the routes necessary to issue access tokens and revoke access tokens, clients, and personal access tokens:
+Next, you should call the `LumenPassport::routes` method within the `boot` method of your application (one of your service providers). This method will register the routes necessary to issue access tokens and revoke access tokens, clients, and personal access tokens:
 
 ```php
-\Dusterio\LumenPassport\LumenPassport::routes($this->app);
+/** @file app/Providers/AuthServiceProvider.php */
+
+use Dusterio\LumenPassport\LumenPassport;
+
+class AuthServiceProvider extends ServiceProvider
+{
+    public function boot()
+    {
+        LumenPassport::routes($this->app);
+
+        /* rest of boot */
+    }
+}
 ```
 
-You can add that into an existing group, or add use this route registrar independently like so;
+### User model
+
+Make sure your user model uses **Laravel Passport**'s `HasApiTokens` trait.
 
 ```php
-\Dusterio\LumenPassport\LumenPassport::routes($this->app, ['prefix' => 'v1/oauth']);
-```
+/** @file app/Models/User.php */
 
-## User model
+use Laravel\Passport\HasApiTokens;
 
-Make sure your user model uses Passport's ```HasApiTokens``` trait, eg.:
-
-```php
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
-    use HasApiTokens, Authenticatable, Authorizable;
+    use HasApiTokens, Authenticatable, Authorizable, HasFactory;
 
     /* rest of the model */
 }
 ```
 
-## Extra features
+## Usage
 
-There are a couple of extra features that aren't present in Laravel Passport
+You'll find all the documentation in [Laravel Passport Docs](https://laravel.com/docs/master/passport).
 
-### Allowing multiple tokens per client
+### Curl example with username and password authentication
 
-Sometimes it's handy to allow multiple access tokens per password grant client. Eg. user logs in from several browsers 
-simultaneously. Currently Laravel Passport does not allow that.
+First you have to [issue an access token](https://laravel.com/docs/master/passport#issuing-access-tokens) and then you can use it to authenticate your requests.
+
+```bash
+# Request
+curl --location --request POST '{{APP_URL}}/oauth/token' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "grant_type": "password",
+    "client_id": "{{CLIENT_ID}}",
+    "client_secret": "{{CLIENT_SECRET}}",
+    "username": "{{USER_EMAIL}}",
+    "password": "{{USER_PASSWORD}}",
+    "scope": "*"
+}'
+```
+
+```json
+// response
+{
+    "token_type": "Bearer",
+    "expires_in": 31536000,
+    "access_token": "******",
+    "refresh_token": "******"
+}
+```
+
+And with the `access_token` you can request access to the routes that uses the Auth:Api Middleware provided by the **Lumen Passport**.
 
 ```php
+/** @file routes/web.php */
+
+$router->get('/ping', ['middleware' => 'auth', fn () => 'pong']);
+```
+
+```bash
+# Request
+curl --location --request GET '{{APP_URL}}/ping' \
+--header 'Authorization: Bearer {{ACCESS_TOKEN}}'
+```
+
+```html
+<!-- response -->
+pong
+```
+
+### Installed routes
+
+This package mounts the following routes after you call `routes()` method, all of them belongs to the namespace `\Laravel\Passport\Http\Controllers`:
+
+Verb | Path | Controller | Action | Middleware
+--- | --- | --- | --- | ---
+POST   | /oauth/token                             | AccessTokenController           | issueToken | -
+GET    | /oauth/tokens                            | AuthorizedAccessTokenController | forUser    | auth
+DELETE | /oauth/tokens/{token_id}                 | AuthorizedAccessTokenController | destroy    | auth
+POST   | /oauth/token/refresh                     | TransientTokenController        | refresh    | auth
+GET    | /oauth/clients                           | ClientController                | forUser    | auth
+POST   | /oauth/clients                           | ClientController                | store      | auth
+PUT    | /oauth/clients/{client_id}               | ClientController                | update     | auth
+DELETE | /oauth/clients/{client_id}               | ClientController                | destroy    | auth
+GET    | /oauth/scopes                            | ScopeController                 | all        | auth
+GET    | /oauth/personal-access-tokens            | PersonalAccessTokenController   | forUser    | auth
+POST   | /oauth/personal-access-tokens            | PersonalAccessTokenController   | store      | auth
+DELETE | /oauth/personal-access-tokens/{token_id} | PersonalAccessTokenController   | destroy    | auth
+
+\* _Note: some of the **Laravel Passport**'s routes had to 'go away' because they are web-related and rely on sessions (eg. authorise pages). Lumen is an API framework so only API-related routes are present._
+
+## Extra features
+
+There are a couple of extra features that aren't present in **Laravel Passport**
+
+### Prefixing Routes
+
+You can add that into an existing group, or add use this route registrar independently like so;
+
+```php
+/** @file app/Providers/AuthServiceProvider.php */
+
 use Dusterio\LumenPassport\LumenPassport;
 
-// Somewhere in your application service provider or bootstrap process
-LumenPassport::allowMultipleTokens();
+class AuthServiceProvider extends ServiceProvider
+{
+    public function boot()
+    {
+        LumenPassport::routes($this->app, ['prefix' => 'v1/oauth']);
 
+        /* rest of boot */
+    }
+}
+```
+
+### Multiple tokens per client
+
+Sometimes it's handy to allow multiple access tokens per password grant client. Eg. user logs in from several browsers
+simultaneously. Currently **Laravel Passport** does not allow that.
+
+```php
+/** @file app/Providers/AuthServiceProvider.php */
+
+use Dusterio\LumenPassport\LumenPassport;
+
+class AuthServiceProvider extends ServiceProvider
+{
+    public function boot()
+    {
+        LumenPassport::routes($this->app);
+        LumenPassport::allowMultipleTokens();
+
+        /* rest of boot */
+    }
+}
 ```
 
 ### Different TTLs for different password clients
 
-Laravel Passport allows to set one global TTL for access tokens, but it may be useful sometimes
-to set different TTLs for different clients (eg. mobile users get more time than desktop users).
+**Laravel Passport** allows to set one global TTL (time to live) for access tokens, but it may be useful sometimes to set different TTLs for different clients (eg. mobile users get more time than desktop users).
 
 Simply do the following in your service provider:
 
 ```php
-// Second parameter is the client Id
-LumenPassport::tokensExpireIn(Carbon::now()->addYears(50), 2); 
+/** @file app/Providers/AuthServiceProvider.php */
+
+use Carbon\Carbon;
+use Dusterio\LumenPassport\LumenPassport;
+
+class AuthServiceProvider extends ServiceProvider
+{
+    public function boot()
+    {
+        LumenPassport::routes($this->app);
+        $client_id = '1';
+        LumenPassport::tokensExpireIn(Carbon::now()->addDays(14), $client_id); 
+
+        /* rest of boot */
+    }
+}
 ```
 
 If you don't specify client Id, it will simply fall back to Laravel Passport implementation.
 
-### Console command for purging expired tokens
+### Purge expired tokens
 
-Simply run ```php artisan passport:purge``` to remove expired refresh tokens and their corresponding access tokens from the database.
-
-
-## Running with Apache httpd
-
-If you are using Apache web server, it may strip Authorization headers and thus break Passport.
-
-Add the following either to your config directly or to ```.htaccess```:
-
+```bash
+php artisan passport:purge
 ```
-RewriteEngine On
-RewriteCond %{HTTP:Authorization} ^(.*)
-RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
-```
+
+Simply run it to remove expired refresh tokens and their corresponding access tokens from the database.
+
+## Error and issue resolution
+
+Instead of opening a new issue, please see if someone has already had it and it has been resolved and closed.
 
 ## Video tutorials
 
-I've just started a educational YouTube channel that will cover top IT trends in software development and DevOps: [config.sys](https://www.youtube.com/channel/UCIvUJ1iVRjJP_xL0CD7cMpg)
+I've just started a educational YouTube channel [config.sys](https://www.youtube.com/channel/UCIvUJ1iVRjJP_xL0CD7cMpg) that will cover top IT trends in software development and DevOps.
 
 Also I'm happy to announce my newest tool – [GrammarCI](https://www.grammarci.com/), an automated (as a part of CI/CD process) spelling and grammar checks for your code so that your users don't see your typos :)
 
