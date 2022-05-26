@@ -308,7 +308,9 @@ Simply run it to remove expired refresh tokens and their corresponding access to
 
 ## Error and issue resolution
 
-Instead of opening a new issue, please see if someone has already had it and it has been resolved and closed.
+Instead of opening a new issue, please see if someone has already had it and it has been resolved.
+
+If you have found a bug or want to contribute to improving the package, please review the [Contributing guide](https://github.com/dusterio/lumen-passport/blob/master/CONTRIBUTING.md) and the [Code of Conduct](https://github.com/dusterio/lumen-passport/blob/master/CODE_OF_CONDUCT.md).
 
 ## Video tutorials
 
