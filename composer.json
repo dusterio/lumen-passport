@@ -2,7 +2,11 @@
     "name": "dusterio/lumen-passport",
     "type": "library",
     "description": "Making Laravel Passport work with Lumen",
-    "keywords": ["php","lumen","laravel passport"],
+    "keywords": [
+        "php",
+        "lumen",
+        "laravel passport"
+    ],
     "homepage": "https://github.com/dusterio/lumen-passport",
     "license": "MIT",
     "authors": [
@@ -14,20 +18,20 @@
     ],
     "require": {
         "php": ">=7.1",
-        "illuminate/database": "~5.3|~5.4|~5.5|~5.6|^6.0|^7.0|^8.0|^9.0",
-        "illuminate/support": "~5.3|~5.4|~5.5|~5.6|^6.0|^7.0|^8.0|^9.0",
+        "illuminate/database": "~5.3|~5.4|~5.5|~5.6|^6.0|^7.0|^8.0|^9.0|^10.0",
+        "illuminate/support": "~5.3|~5.4|~5.5|~5.6|^6.0|^7.0|^8.0|^9.0|^10.0",
         "laravel/passport": ">=0.2.2",
         "laminas/laminas-diactoros": "^2.4"
     },
     "require-dev": {
-        "fakerphp/faker": "^1.19",
+        "fakerphp/faker": "^1.19|^1.9.1",
         "phpunit/phpunit": "^7.0|^8.0|^9.0"
     },
     "autoload": {
         "psr-4": {
             "Dusterio\\LumenPassport\\": "src/"
         },
-         "files": [
+        "files": [
             "src/helpers.php"
         ]
     }
