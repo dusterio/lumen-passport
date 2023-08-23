@@ -7,6 +7,9 @@ use Laravel\Passport\Token;
 use Laminas\Diactoros\Response as Psr7Response;
 use Psr\Http\Message\ServerRequestInterface;
 use Dusterio\LumenPassport\LumenPassport;
+use Laravel\Passport\PersonalAccessTokenFactory;
+use Laravel\Passport\TokenRepository;
+use League\OAuth2\Server\AuthorizationServer;
 
 /**
  * Class AccessTokenController
@@ -14,6 +17,15 @@ use Dusterio\LumenPassport\LumenPassport;
  */
 class AccessTokenController extends \Laravel\Passport\Http\Controllers\AccessTokenController
 {
+    protected $accessTokenFactory;
+    public function __construct(
+        PersonalAccessTokenFactory $accessTokenFactory,
+        AuthorizationServer $server,
+        TokenRepository $tokens
+    ) {
+        $this->accessTokenFactory = $accessTokenFactory;
+        parent::__construct($server, $tokens);
+    }
     /**
      * Authorize a client to access the user's account.
      *
@@ -28,7 +40,8 @@ class AccessTokenController extends \Laravel\Passport\Http\Controllers\AccessTok
 
             // Overwrite password grant at the last minute to add support for customized TTLs
             $this->server->enableGrantType(
-                $this->makePasswordGrant(), LumenPassport::tokensExpireIn(null, $clientId)
+                $this->makePasswordGrant(),
+                LumenPassport::tokensExpireIn(null, $clientId)
             );
 
             return $this->server->respondToAccessTokenRequest($request, new Psr7Response);
@@ -41,17 +54,9 @@ class AccessTokenController extends \Laravel\Passport\Http\Controllers\AccessTok
         $payload = json_decode($response->getBody()->__toString(), true);
 
         if (isset($payload['access_token'])) {
-            /* @deprecated the jwt property will be removed in a future Laravel Passport release */
-            $token = $this->jwt->parse($payload['access_token']);
-            if (method_exists($token, 'getClaim')) {
-                $tokenId = $token->getClaim('jti');
-            } else if (method_exists($token, 'claims')) {
-                $tokenId = $token->claims()->get('jti');
-            } else {
-                throw new \RuntimeException('This package is not compatible with the Laravel Passport version used');
-            }
 
-            $token = $this->tokens->find($tokenId);
+            $token = $this->accessTokenFactory->findAccessToken($payload);
+
             if (!$token instanceof Token) {
                 return $response;
             }
@@ -59,7 +64,7 @@ class AccessTokenController extends \Laravel\Passport\Http\Controllers\AccessTok
             if ($token->client->firstParty() && LumenPassport::$allowMultipleTokens) {
                 // We keep previous tokens for password clients
             } else {
-                $this->revokeOrDeleteAccessTokens($token, $tokenId);
+                $this->revokeOrDeleteAccessTokens($token, $token->id);
             }
         }
 
