@@ -9,7 +9,7 @@ php:
   - '8.1'
 
 before_script:
-  - composer install --dev
+  - COMPOSER_MEMORY_LIMIT=-1 travis_retry composer install --prefer-dist --no-interaction
 
 script:
   - ./vendor/bin/phpunit
