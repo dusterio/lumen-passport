@@ -18,14 +18,14 @@
     ],
     "require": {
         "php": ">=7.1",
-        "illuminate/database": "~5.3|~5.4|~5.5|~5.6|^6.0|^7.0|^8.0|^9.0|^10.0",
-        "illuminate/support": "~5.3|~5.4|~5.5|~5.6|^6.0|^7.0|^8.0|^9.0|^10.0",
+        "illuminate/database": "~5.3|~5.4|~5.5|~5.6|^6.0|^7.0|^8.0|^9.0|^10.0|^11.0",
+        "illuminate/support": "~5.3|~5.4|~5.5|~5.6|^6.0|^7.0|^8.0|^9.0|^10.0|^11.0",
         "laravel/passport": ">=0.2.2",
-        "laminas/laminas-diactoros": "^2.4"
+        "laminas/laminas-diactoros": "^2.4|^3.3"
     },
     "require-dev": {
         "fakerphp/faker": "^1.19|^1.9.1",
-        "phpunit/phpunit": "^7.0|^8.0|^9.0"
+        "phpunit/phpunit": "^7.0|^8.0|^9.0|^10.5"
     },
     "autoload": {
         "psr-4": {
